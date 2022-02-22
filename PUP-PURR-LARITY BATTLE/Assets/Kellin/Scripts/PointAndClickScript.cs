@@ -16,9 +16,7 @@ public class PointAndClickScript : MonoBehaviour
         {
             Debug.Log("No m_bodyMovementScript found on: " + this.name);
         }
-
     }
-
 
     private void Update()
     {
@@ -31,9 +29,7 @@ public class PointAndClickScript : MonoBehaviour
                 if(hit.collider.CompareTag("Needs Fixing"))
                 {
                     Debug.Log("Cat goes fixing");
-
                     m_bodyMovementScript.MoveToBrokenMachine(hit.collider.gameObject.transform);
-
                 }
             }
         }

@@ -24,6 +24,9 @@ public class BodyMovementScript : MonoBehaviour
     public enum CatState { Wandering, GoingToFixSpot, Fixing, Distracted }
     public CatState m_catState;
 
+    [Header("Fixing State Settings")]
+    public float m_timeTillDoneFixing = 5;
+    public float m_currentFixingProgress;
 
     [Header("Debug Variables")]
     public bool m_randomFlipTime = false;   // To make the flip time no longer randomized
@@ -40,33 +43,24 @@ public class BodyMovementScript : MonoBehaviour
 
     void Update()
     {
-        if (m_catState == CatState.Wandering)
+        switch (m_catState)
         {
-            if (m_time > m_pickedValue || transform.position.x < m_borderPoints[0].position.x | transform.position.x > m_borderPoints[1].position.x)
-            {
-                FlipBody();
-            }
+            case CatState.Wandering:
+                WanderingState();
+                break;
+            case CatState.GoingToFixSpot:
+                GoingToFixSpotState();
+                break;
+            case CatState.Fixing:
+                FixingState();
+                break;
+            case CatState.Distracted:
+                break;
         }
-        else if(m_catState == CatState.GoingToFixSpot)
-        {
-            if(Vector3.Distance(transform.position, m_target.position) < 1)
-            {
-                m_catState = CatState.Fixing;
-            }
-        }
-
-        if (m_catState != CatState.Fixing)
-        {
-            MoveBody();
-            m_time += Time.deltaTime;
-        }
-        else
-        {
-            m_time = 0;
-        }
-
     }
 
+    // Inside of this region there are Move functions
+    #region Move Fucntions
     // Move the body
     private void MoveBody()
     {
@@ -82,7 +76,7 @@ public class BodyMovementScript : MonoBehaviour
     {
         m_isFlipped = !m_isFlipped;
         m_direction = m_isFlipped ? 1 : -1;
-        m_bodyScale.x = m_isFlipped ? -1 : 1;
+        m_bodyScale.x = m_isFlipped ? 1 : -1;
 
         transform.localScale = m_bodyScale;
         m_pickedValue = m_randomFlipTime ? Random.Range(m_timeTillFlip.x, m_timeTillFlip.y) : m_pickedValue = m_timeTillFlip.x;
@@ -93,15 +87,59 @@ public class BodyMovementScript : MonoBehaviour
     public void MoveToBrokenMachine(Transform givenMachine)
     {
         m_catState = CatState.GoingToFixSpot;
+        
+        m_currentFixingProgress = 0;
         m_target = givenMachine;
 
         if (transform.position.x > m_target.position.x & m_isFlipped || transform.position.x < m_target.position.x & !m_isFlipped)
         {
             FlipBody();
         }
-
-        Debug.Log(givenMachine.position);
     }
+    #endregion
+
+    // Inside of this region there are State functions 
+    #region State Functions
+    private void WanderingState()
+    {
+        MoveBody();
+
+        m_time += Time.deltaTime;
+
+        if (m_time > m_pickedValue || transform.position.x < m_borderPoints[0].position.x | transform.position.x > m_borderPoints[1].position.x)
+        {
+            FlipBody();
+        }
+    }
+
+    private void GoingToFixSpotState()
+    {
+        MoveBody();
+
+        m_time = 0;
+
+        if (Vector3.Distance(transform.position, m_target.position) < 1)
+        {
+            m_catState = CatState.Fixing;
+        }
+    }
+
+    private void FixingState()
+    {
+        m_time = 0;
+
+        m_currentFixingProgress += Time.deltaTime;
+
+        if (m_currentFixingProgress > m_timeTillDoneFixing)
+        {
+            m_target.GetComponent<MeshRenderer>().material = WorldScript.instance.m_machineFixedMaterial;
+            m_target.tag = "Fixed";
+
+            m_catState = CatState.Wandering;
+            m_currentFixingProgress = 0;
+        }
+    }
+    #endregion
 
     private void OnDrawGizmos()
     {
@@ -113,5 +151,7 @@ public class BodyMovementScript : MonoBehaviour
             }
         }
     }
+
+    // TODO: Allow the Kitty to rotate on its Y axis instead of using the Scaler
 
 }
