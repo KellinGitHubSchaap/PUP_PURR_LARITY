@@ -1,27 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SatellitePool : MonoBehaviour
+public class ObjectPool : MonoBehaviour
 {
-    public static SatellitePool SharedInstance;
     public List<GameObject> pooledObjects;
     public GameObject objectToPool;
     public int amountToPool;
 
     void Awake()
     {
-        SharedInstance = this;
-        
         pooledObjects = new List<GameObject>();
         for (int i = 0; i < amountToPool; i++)
         {
-            var tmp = Instantiate(objectToPool, transform);
-            tmp.SetActive(false);
-            pooledObjects.Add(tmp);
+            var gameObj = Instantiate(objectToPool, transform);
+            gameObj.SetActive(false);
+            pooledObjects.Add(gameObj);
         }
     }
 
-    public GameObject GetSatellite()
+    public GameObject GetObject()
     {
         for(int i = 0; i < amountToPool; i++)
         {
@@ -31,9 +28,9 @@ public class SatellitePool : MonoBehaviour
             }
         }
 
-        var newSatellite = Instantiate(objectToPool, transform);
-        newSatellite.SetActive(false);
-        pooledObjects.Add(newSatellite);
-        return newSatellite;
+        var gameObj = Instantiate(objectToPool, transform);
+        gameObj.SetActive(false);
+        pooledObjects.Add(gameObj);
+        return gameObj;
     }
 }

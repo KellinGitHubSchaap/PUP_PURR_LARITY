@@ -21,6 +21,12 @@ public class Satellite : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    public void Init(Vector2 startPosition, Vector2 direction, SatelliteType type)
+    {
+        _transform.position = startPosition;
+        _direction = direction;
+        SetType(type);
+    }
     private void OnEnable()
     {
         _lifeTimer = 0;
@@ -48,7 +54,7 @@ public class Satellite : MonoBehaviour
         _transform.position = position;
     }
 
-    public void SetType(SatelliteType type)
+    private void SetType(SatelliteType type)
     {
         Type = type;
         switch (type)
@@ -62,8 +68,18 @@ public class Satellite : MonoBehaviour
         }
     }
     
-    public void SetDirection(Vector2 direction)
+    public void Hit()
     {
-        _direction = direction;
+        switch (Type)
+        {
+            case SatelliteType.CatDog:
+                //TODO: decrease score
+                break;
+            case SatelliteType.BirdFish:
+                //TODO: increase score
+                break;
+        }
+        
+        gameObject.SetActive(false);
     }
 }

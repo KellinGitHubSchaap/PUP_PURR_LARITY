@@ -1,11 +1,15 @@
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SatelliteManager : Singleton<SatelliteManager>
 {
-    [SerializeField] private float satelliteDirOffset = -0.1f;
+    [SerializeField] private int catDogRngWeight = 1;
+    [SerializeField] private int birdFishRngWeight = 1;
+    [SerializeField] private float timeBetweenSpawns;
+
+    [SerializeField] private float satelliteDirOffset = 0.1f;
+    [SerializeField] private ObjectPool satellitePool;
 
     private Camera _camera;
 
@@ -15,17 +19,36 @@ public class SatelliteManager : Singleton<SatelliteManager>
         _camera = Camera.main;
     }
 
-    [ContextMenu("SpawnSatellite")]
-    public void SpawnSatellite()
+    [ContextMenu("StartSpawning")]
+    public void StartSatelliteSpawning()
     {
-        var newSatellite = SatellitePool.SharedInstance.GetSatellite();
+        InvokeRepeating(nameof(SpawnSatellite), 0, timeBetweenSpawns);
+    }
+
+    [ContextMenu("StopSpawning")]
+    public void StopSatelliteSpawning()
+    {
+        CancelInvoke(nameof(SpawnSatellite));
+    }
+
+    private void SpawnSatellite()
+    {
+        var randomPosition = GetRandomPositionOutOfView();
+        var direction = GetCrossScreenDirection(randomPosition);
+        var type = GetRandomType();
+
+        var newSatellite = satellitePool.GetObject();
         newSatellite.SetActive(true);
 
-        var randomPosition = GetRandomPositionOutOfView();
-        newSatellite.transform.position = randomPosition;
+        newSatellite.GetComponent<Satellite>().Init(randomPosition, direction, type);
+    }
 
-        var satellite = newSatellite.GetComponent<Satellite>();
-        satellite.SetDirection(GetCrossScreenDirection(randomPosition));
+    private SatelliteType GetRandomType()
+    {
+        var totalRngWeight = catDogRngWeight + birdFishRngWeight;
+        var rand = Random.Range(0, totalRngWeight);
+
+        return rand < catDogRngWeight ? SatelliteType.CatDog : SatelliteType.BirdFish;
     }
 
     private Vector2 GetCrossScreenDirection(Vector2 startPosition)

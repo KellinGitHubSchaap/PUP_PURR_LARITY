@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Needs Fixing
   - Fixed
+  - Satellite
   layers:
   - Default
   - TransparentFX
