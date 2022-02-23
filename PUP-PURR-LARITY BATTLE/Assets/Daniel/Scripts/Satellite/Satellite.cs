@@ -12,7 +12,7 @@ public class Satellite : MonoBehaviour
 
     private float _lifeTimer;
     private SpriteRenderer _spriteRenderer;
-    private Vector2 _direction = Vector2.one;
+    private Vector2 _direction;
     private Transform _transform;
     
     private void Awake()

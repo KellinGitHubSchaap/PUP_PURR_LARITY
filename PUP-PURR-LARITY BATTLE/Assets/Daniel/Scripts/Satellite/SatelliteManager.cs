@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 public class SatelliteManager : Singleton<SatelliteManager>
 {
     [SerializeField] private float satelliteDirOffset = -0.1f;
-    
+
     private Camera _camera;
 
     protected override void Awake()
@@ -15,20 +15,15 @@ public class SatelliteManager : Singleton<SatelliteManager>
         _camera = Camera.main;
     }
 
-    private void Start()
-    {
-        SpawnSatellite();
-    }
-
     [ContextMenu("SpawnSatellite")]
     public void SpawnSatellite()
     {
         var newSatellite = SatellitePool.SharedInstance.GetSatellite();
         newSatellite.SetActive(true);
-        
+
         var randomPosition = GetRandomPositionOutOfView();
         newSatellite.transform.position = randomPosition;
-        
+
         var satellite = newSatellite.GetComponent<Satellite>();
         satellite.SetDirection(GetCrossScreenDirection(randomPosition));
     }
@@ -38,7 +33,7 @@ public class SatelliteManager : Singleton<SatelliteManager>
         var xOffset = Random.Range(-satelliteDirOffset, satelliteDirOffset);
         var yOffset = Random.Range(-satelliteDirOffset, satelliteDirOffset);
 
-        var centerOffset = new Vector2(0.5f + xOffset, 0.5f + xOffset);
+        var centerOffset = new Vector2(0.5f + xOffset, 0.5f + yOffset);
         var direction = ((Vector2) _camera.ViewportToWorldPoint(centerOffset) - startPosition).normalized;
 
         return direction;
@@ -60,8 +55,8 @@ public class SatelliteManager : Singleton<SatelliteManager>
 
         var xDir = xViewport * 0.1f;
         var yDir = yViewport * 0.1f;
-        
-        var pos =  _camera.ViewportToWorldPoint(new Vector2(xDir, yDir));
+
+        var pos = _camera.ViewportToWorldPoint(new Vector2(xDir, yDir));
         return pos;
     }
 }
