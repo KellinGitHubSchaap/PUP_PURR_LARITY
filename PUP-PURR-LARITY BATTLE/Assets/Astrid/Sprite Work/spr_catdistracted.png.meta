@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 4a4e675efa631004886861b78281f459
+guid: 9bdeeb734c0e89843958a0ffa3cc7e82
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -33,27 +33,27 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
+    wrapU: 1
+    wrapV: 1
     wrapW: 0
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 650
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -140,13 +140,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CatWalk_0
+      name: spr_catdistracted_0
       rect:
         serializedVersion: 2
-        x: 56
-        y: 65
-        width: 506
-        height: 722
+        x: 0
+        y: 0
+        width: 724
+        height: 501
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,20 +154,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0bee3e9fdd445704db8e26f399309bf4
-      internalID: 1125457277
+      spriteID: 7f245c0cde46ea644a6dfcb619325325
+      internalID: 620567827
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CatWalk_1
+      name: spr_catdistracted_1
       rect:
         serializedVersion: 2
-        x: 626
-        y: 56
-        width: 460
-        height: 729
+        x: 787
+        y: 1
+        width: 719
+        height: 501
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -175,8 +175,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 80651e344546b5f4aaaeee98c8c41e5e
-      internalID: -496669982
+      spriteID: e498bec9ee562c94faa65aae701ac9a7
+      internalID: 1329398828
       vertices: []
       indices: 
       edges: []
@@ -184,16 +184,16 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    spriteID: c443ba81acd98fe4e8e25e266723fbf6
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      CatWalk_0: 1125457277
-      CatWalk_1: -496669982
+      spr_catdistracted_0: 620567827
+      spr_catdistracted_1: 1329398828
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
