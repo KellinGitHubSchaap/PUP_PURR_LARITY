@@ -34,8 +34,6 @@ public class BodyMovementScript : MonoBehaviour
 
     [Header("Debug Variables")]
     public bool m_randomFlipTime = false;   // To make the flip time no longer randomized
-    public Sprite m_tempDogSprite;
-    public Sprite m_tempCatSprite;
 
     void Start()
     {
@@ -208,18 +206,12 @@ public class BodyMovementScript : MonoBehaviour
     // If the cat or dog are no longer focused they are going to play with their distraction
     private void PlayingState()
     {
-        if (this.gameObject.GetComponentInChildren<SpriteRenderer>().sprite != m_tempDogSprite)
-        {
-            this.gameObject.GetComponentInChildren<SpriteRenderer>().sprite = m_tempDogSprite;
-        }
-
         m_currentTimePlaying += Time.deltaTime;
 
         if (m_currentTimePlaying > m_timeTillDonePlaying || m_isFocused)
         {
             m_currentTimePlaying = 0;
 
-            this.gameObject.GetComponentInChildren<SpriteRenderer>().sprite = m_tempCatSprite;
             m_catState = CatState.Wandering;
         }
     }
