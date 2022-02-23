@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
@@ -7,7 +8,7 @@ public class ObjectPool : MonoBehaviour
     public GameObject objectToPool;
     public int amountToPool;
 
-    void Awake()
+    private void Awake()
     {
         pooledObjects = new List<GameObject>();
         for (int i = 0; i < amountToPool; i++)
@@ -20,12 +21,9 @@ public class ObjectPool : MonoBehaviour
 
     public GameObject GetObject()
     {
-        for(int i = 0; i < amountToPool; i++)
+        foreach (var obj in pooledObjects.Where(obj => !obj.activeInHierarchy))
         {
-            if(!pooledObjects[i].activeInHierarchy)
-            {
-                return pooledObjects[i];
-            }
+            return obj;
         }
 
         var gameObj = Instantiate(objectToPool, transform);
