@@ -20,6 +20,8 @@ public class BodyMovementScript : MonoBehaviour
     public bool m_isFlipped = false;    // Is the body already flipped?
     private bool m_canFlip = true;      // Can the get flip around?
 
+    private Animator m_animator;    // Animator of the body
+
     [Header("Outside of Body Settings")]
     public Transform[] m_borderPoints;  // Points where the body can move freely 
     public Transform m_target;          // Target for the Body to walk to
@@ -37,6 +39,8 @@ public class BodyMovementScript : MonoBehaviour
 
     void Start()
     {
+        m_animator = GetComponent<Animator>();
+
         m_catState = CatState.Wandering;
         m_pickedTime = m_randomFlipTime ? Random.Range(m_timeTillFlip.x, m_timeTillFlip.y) : m_pickedTime = m_timeTillFlip.x; // Pick either a random time or a set time based on boolean m_randomTimeFlip
 
@@ -48,18 +52,35 @@ public class BodyMovementScript : MonoBehaviour
         switch (m_catState)
         {
             case CatState.Wandering:
+                if (m_animator.GetInteger("catAnimState") != 0)
+                {
+                    m_animator.SetInteger("catAnimState", 0);
+                }
                 WanderingState();
                 break;
             case CatState.GoingToFixSpot:
+                if (m_animator.GetInteger("catAnimState") != 0)
+                {
+                    m_animator.SetInteger("catAnimState", 0);
+                }
                 GoingToFixSpotState();
                 break;
             case CatState.Fixing:
+
                 FixingState();
                 break;
             case CatState.Distracted:
+                if (m_animator.GetInteger("catAnimState") != 0)
+                {
+                    m_animator.SetInteger("catAnimState", 0);
+                }
                 DistractedState();
                 break;
             case CatState.IsPlaying:
+                if (m_animator.GetInteger("catAnimState") != 1)
+                {
+                    m_animator.SetInteger("catAnimState", 1);
+                }
                 PlayingState();
                 break;
         }
@@ -207,6 +228,11 @@ public class BodyMovementScript : MonoBehaviour
     private void PlayingState()
     {
         m_currentTimePlaying += Time.deltaTime;
+
+        if (m_animator.GetFloat("catAnimState") != 1)
+        {
+            m_animator.SetFloat("catAnimState", 1);
+        }
 
         if (m_currentTimePlaying > m_timeTillDonePlaying || m_isFocused)
         {
