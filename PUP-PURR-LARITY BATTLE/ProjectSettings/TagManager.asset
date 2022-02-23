@@ -6,7 +6,8 @@ TagManager:
   tags:
   - Needs Fixing
   - Fixed
-  - Satellite
+  - Cat
+  - Dog
   layers:
   - Default
   - TransparentFX
