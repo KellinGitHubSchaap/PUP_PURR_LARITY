@@ -20,16 +20,15 @@ public class PointAndClickScript : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = m_cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = m_cam.ScreenPointToRay(Input.mousePosition);
 
-            if(Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hoverHit))
+        {
+            if (hoverHit.collider.CompareTag("Cat") && hoverHit.collider.gameObject.GetComponent<BodyMovementScript>().m_catState == BodyMovementScript.CatState.IsPlaying)
             {
-                if(hit.collider.CompareTag("Needs Fixing"))
+                if (Input.GetMouseButtonDown(0))
                 {
-                    Debug.Log("Cat goes fixing");
-                    m_bodyMovementScript.MoveToBrokenMachine(hit.collider.gameObject.transform);
+                    hoverHit.collider.gameObject.GetComponent<BodyMovementScript>().m_isFocused = true;
                 }
             }
         }

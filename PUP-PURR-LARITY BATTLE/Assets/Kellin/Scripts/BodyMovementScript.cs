@@ -6,39 +6,47 @@ using UnityEngine;
 public class BodyMovementScript : MonoBehaviour
 {
     [Header("Body Movement")]
-    public float m_movementSpeed = 1;   // Speed of the body
-    private int m_direction;            // Movement direction of the body
+    public float m_movementSpeed = 1;                           // Speed of the body
+    private int m_direction = 1;                                // Movement direction of the body
+    private float m_rotationTimer;                              // Current time of the rotation animation
+    [Range(0.1f, 2f)] public float m_setRotationSpeed = 0.9f;   // How fast should the body Rotate
+    [Range(0.1f, 2f)] public float m_currentRotationSpeed;      // How fast should the body Rotate
 
     [Header("Body Visuals")]
     public Vector2 m_timeTillFlip;      // Time till the body flips around
-    public float m_pickedValue;         // Time that has been chosen for when a flip will occur 
-    public float m_time;                // Current time
+    public float m_pickedTime;          // Time that has been chosen for when a flip will occur 
+    public float m_currentFlipTimer;    // Current time
 
-    private bool m_isFlipped = false;   // Is the body already flipped?
-    private Vector3 m_bodyScale;        // Scale of the body
+    public bool m_isFlipped = false;   // Is the body already flipped?
+    private bool m_canFlip = true;
 
     [Header("Outside of Body Settings")]
     public Transform[] m_borderPoints;  // Points where the body can move freely 
-    private Transform m_target;
+    public Transform m_target;         // Target for the Body to walk to
 
-    public enum CatState { Wandering, GoingToFixSpot, Fixing, Distracted }
-    public CatState m_catState;
+    public enum CatState { Wandering, GoingToFixSpot, Fixing, Distracted, IsPlaying }
+    public CatState m_catState;     // State of the cat
 
     [Header("Fixing State Settings")]
-    public float m_timeTillDoneFixing = 5;
-    public float m_currentFixingProgress;
+    public float m_timeTillDoneFixing = 5;      // Time until the cat is finished repairing a machine
+    public float m_currentFixingProgress;       // Current time that the cat spent fixing
+
+    [Header("Playing State Settings")]
+    public float m_timeTillDonePlaying = 7;     // How long untill they stop playing
+    public float m_currentTimePlaying;          // Current time that the cat spent playing
+    public bool m_isFocused = true;             // Check to see if body is still focused
 
     [Header("Debug Variables")]
     public bool m_randomFlipTime = false;   // To make the flip time no longer randomized
+    public Sprite m_tempDogSprite;
+    public Sprite m_tempCatSprite;
 
     void Start()
     {
         m_catState = CatState.Wandering;
+        m_pickedTime = m_randomFlipTime ? Random.Range(m_timeTillFlip.x, m_timeTillFlip.y) : m_pickedTime = m_timeTillFlip.x; // Pick either a random time or a set time based on boolean m_randomTimeFlip
 
-        m_pickedValue = m_randomFlipTime ? Random.Range(m_timeTillFlip.x, m_timeTillFlip.y) : m_pickedValue = m_timeTillFlip.x;
-        m_time = m_pickedValue;
-
-        m_bodyScale = transform.localScale;
+        m_currentRotationSpeed = m_setRotationSpeed;
     }
 
     void Update()
@@ -55,6 +63,10 @@ public class BodyMovementScript : MonoBehaviour
                 FixingState();
                 break;
             case CatState.Distracted:
+                DistractedState();
+                break;
+            case CatState.IsPlaying:
+                PlayingState();
                 break;
         }
     }
@@ -72,29 +84,30 @@ public class BodyMovementScript : MonoBehaviour
     }
 
     // Flip the sprite of the body
-    private void FlipBody()
+    private IEnumerator FlipBodyAnimation()
     {
-        m_isFlipped = !m_isFlipped;
         m_direction = m_isFlipped ? 1 : -1;
-        m_bodyScale.x = m_isFlipped ? 1 : -1;
 
-        transform.localScale = m_bodyScale;
-        m_pickedValue = m_randomFlipTime ? Random.Range(m_timeTillFlip.x, m_timeTillFlip.y) : m_pickedValue = m_timeTillFlip.x;
-        m_time = 0;
-    }
+        m_currentFlipTimer = 0;
+        m_pickedTime = m_randomFlipTime ? Random.Range(m_timeTillFlip.x, m_timeTillFlip.y) : m_pickedTime = m_timeTillFlip.x;
 
-    // Set the target position to be that of the givenMachine that needs fixing + Change cat state
-    public void MoveToBrokenMachine(Transform givenMachine)
-    {
-        m_catState = CatState.GoingToFixSpot;
-        
-        m_currentFixingProgress = 0;
-        m_target = givenMachine;
+        float newRotation = m_isFlipped ? 0 : 180;
+        Quaternion targetRotation = Quaternion.Euler(0, newRotation, 0);
 
-        if (transform.position.x > m_target.position.x & m_isFlipped || transform.position.x < m_target.position.x & !m_isFlipped)
+        m_isFlipped = !m_isFlipped;
+
+        while (m_rotationTimer < 0.99)
         {
-            FlipBody();
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_rotationTimer);
+            m_rotationTimer += Time.deltaTime * m_currentRotationSpeed; // * speed gain || / speed lowered
+
+            yield return new WaitForEndOfFrame();
         }
+
+        transform.rotation = targetRotation;
+
+        m_rotationTimer = 0;
+        m_canFlip = true;
     }
     #endregion
 
@@ -103,20 +116,24 @@ public class BodyMovementScript : MonoBehaviour
     private void WanderingState()
     {
         MoveBody();
+        m_currentFlipTimer += Time.deltaTime;
 
-        m_time += Time.deltaTime;
-
-        if (m_time > m_pickedValue || transform.position.x < m_borderPoints[0].position.x | transform.position.x > m_borderPoints[1].position.x)
+        if (m_canFlip)
         {
-            FlipBody();
+            if (m_currentFlipTimer > m_pickedTime || transform.position.x < m_borderPoints[0].position.x | transform.position.x > m_borderPoints[1].position.x)
+            {
+                m_canFlip = false;
+                StartCoroutine(FlipBodyAnimation());
+                Debug.Log("FLIP!");
+            }
         }
     }
 
+    // Move the body to the machine that needs fixing
     private void GoingToFixSpotState()
     {
         MoveBody();
-
-        m_time = 0;
+        m_currentFlipTimer = 0;
 
         if (Vector3.Distance(transform.position, m_target.position) < 1)
         {
@@ -124,19 +141,91 @@ public class BodyMovementScript : MonoBehaviour
         }
     }
 
+    // Set the target position to be that of the givenMachine that needs fixing + Change cat state
+    public void MoveToBrokenMachine(Transform givenMachine)
+    {
+        m_catState = CatState.GoingToFixSpot;
+
+        m_currentFixingProgress = 0;
+        m_target = givenMachine;
+
+        m_currentRotationSpeed = 1.2f;
+
+        if (transform.position.x > m_target.position.x & !m_isFlipped || transform.position.x < m_target.position.x & m_isFlipped)
+        {
+            m_canFlip = false;
+            StartCoroutine(FlipBodyAnimation());
+        }
+
+        m_currentRotationSpeed = m_setRotationSpeed;
+    }
+
+    // If the Cat is fixing a machine 
     private void FixingState()
     {
-        m_time = 0;
-
+        m_currentFlipTimer = 0;
         m_currentFixingProgress += Time.deltaTime;
 
         if (m_currentFixingProgress > m_timeTillDoneFixing)
         {
-            m_target.GetComponent<MeshRenderer>().material = WorldScript.instance.m_machineFixedMaterial;
-            m_target.tag = "Fixed";
+            m_target = null;
 
             m_catState = CatState.Wandering;
             m_currentFixingProgress = 0;
+        }
+    }
+
+    // Move the body to the place where the distraction happens 
+    private void DistractedState()
+    {
+        MoveBody();
+        m_currentFlipTimer = 0;
+
+        if (Vector3.Distance(transform.position, m_target.position) < 1)
+        {
+            m_catState = CatState.IsPlaying;
+            m_target = null;
+            m_isFocused = false;
+        }
+    }
+
+    // Receive information about the place of the distraction
+    public void FindDistraction(Transform objectPosition)
+    {
+        m_catState = CatState.Distracted;
+        WorldScript.instance.m_exclamationPoint.SetActive(true);
+        m_target = objectPosition;
+
+        m_currentRotationSpeed = 1.2f;
+
+        m_currentFlipTimer = 0;
+
+        if (transform.position.x > m_target.position.x & !m_isFlipped || transform.position.x < m_target.position.x & m_isFlipped)
+        {
+            m_canFlip = false;
+            StartCoroutine(FlipBodyAnimation());
+            //Debug.Log("Cat goes fixing");
+        }
+
+        m_currentRotationSpeed = m_setRotationSpeed;
+    }
+
+    // If the cat or dog are no longer focused they are going to play with their distraction
+    private void PlayingState()
+    {
+        if (this.gameObject.GetComponentInChildren<SpriteRenderer>().sprite != m_tempDogSprite)
+        {
+            this.gameObject.GetComponentInChildren<SpriteRenderer>().sprite = m_tempDogSprite;
+        }
+
+        m_currentTimePlaying += Time.deltaTime;
+
+        if(m_currentTimePlaying > m_timeTillDonePlaying || m_isFocused)
+        {
+            m_currentTimePlaying = 0;
+
+            this.gameObject.GetComponentInChildren<SpriteRenderer>().sprite = m_tempCatSprite;
+            m_catState = CatState.Wandering;
         }
     }
     #endregion
@@ -151,7 +240,4 @@ public class BodyMovementScript : MonoBehaviour
             }
         }
     }
-
-    // TODO: Allow the Kitty to rotate on its Y axis instead of using the Scaler
-
 }
