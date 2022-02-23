@@ -29,11 +29,9 @@ public class PointAndClickScript : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     hoverHit.collider.gameObject.GetComponent<BodyMovementScript>().m_isFocused = true;
+                    SoundManager.instance.PlayRefocusSoundEffect(0);
                 }
             }
         }
     }
 }
-
-
-// TODO: Send a signal to the BodyMovementScript that a broken machine is found
