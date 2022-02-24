@@ -15,9 +15,13 @@ public class Dog : MonoBehaviour
 {
     public DogState state;
     [SerializeField] private float playingChance;
+
     [SerializeField] private Transform leftWall;
     [SerializeField] private Transform rightWall;
-    
+
+    [SerializeField] private Transform gunnerWalkSpot;
+    [SerializeField] private Transform idleWalksSpot;
+
     private CharacterMovement _movement;
     private float _idleTimer;
     private Transform _transform;
@@ -45,7 +49,7 @@ public class Dog : MonoBehaviour
         }
     }
 
-    private void EnterState(DogState newState)
+    public void EnterState(DogState newState)
     {
         state = newState;
 
@@ -65,25 +69,38 @@ public class Dog : MonoBehaviour
                 break;
         }
     }
-    
-  public void HandleInteract(GameObject obj, List<Action> callbacks)
+
+    public void HandleInteract(GameObject obj, List<Action> callbacks)
     {
         if (state == DogState.Playing) return;
         if (!obj.CompareTag("GunnerPanel")) return;
-        
-        void State() => EnterState(DogState.Shooting);
-        callbacks.Add(State);
-        EnterState(DogState.Walking);
-        _movement.MoveTo(obj.transform.position, callbacks);
+
+        EnterGunnerMode(callbacks);
     }
-  
+
+    private void EnterGunnerMode(List<Action> callbacks)
+    {
+        void EnterShootState() => EnterState(DogState.Shooting);
+        callbacks.Add(EnterShootState);
+        EnterState(DogState.Walking);
+        void GunnerWalk() => _movement.MoveTo(gunnerWalkSpot.position, callbacks);
+        _movement.MoveTo(idleWalksSpot.position, new List<Action>() {GunnerWalk});
+    }
+
+    [ContextMenu("ExitGunnerMode")]
+    public void ExitGunnerMode()
+    {
+        void EnterIdleState() => EnterState(DogState.Idle);
+        _movement.MoveTo(idleWalksSpot.position, new List<Action>() {EnterIdleState});
+    }
+
     private void Idling()
     {
         _idleTimer -= Time.deltaTime;
         if (_idleTimer > 0) return;
 
         var rand = Random.Range(0f, 1f);
-        
+
         if (rand < playingChance)
         {
             EnterState(DogState.Playing);

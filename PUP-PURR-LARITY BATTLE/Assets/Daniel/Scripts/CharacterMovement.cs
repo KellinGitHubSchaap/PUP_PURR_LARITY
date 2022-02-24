@@ -76,10 +76,13 @@ public class CharacterMovement : MonoBehaviour
 
     private IEnumerator MoveToCoroutine(Vector3 position, List<Action> callbacks = null)
     {
+        var defaultY = _transform.position.y;
+        position = new Vector3(position.x, defaultY, position.z);
+        
         var direction = (position - _transform.position).normalized;
         var sqrDistance = (_transform.position - position).sqrMagnitude;
 
-        while (sqrDistance > .5f)
+        while (sqrDistance > .05f)
         {
             sqrDistance = (_transform.position - position).sqrMagnitude;
             _transform.position += direction * moveSpeed * Time.deltaTime;
@@ -92,7 +95,6 @@ public class CharacterMovement : MonoBehaviour
                 callback?.Invoke();
             }
 
-        Debug.Log("finished move coroutine");
         yield return null;
     }
 }
