@@ -29,6 +29,15 @@ public class WorldScript : MonoBehaviour
 
     public Transform m_positionOfDistraction;       // Where is the distraction coming from
 
+    [Header("Machines Settings")]
+    public MachineScript[] m_machineScripts;
+
+
+    public float m_TimeTillNextIssue = 20f;
+    public float m_currentTimeTillIssue;
+
+
+
     [Header("Scripts")]
     public BodyMovementScript m_catMovementScript;
 
@@ -42,9 +51,33 @@ public class WorldScript : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            m_catMovementScript.FindDistraction(m_positionOfDistraction);
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    m_catMovementScript.FindDistraction(m_positionOfDistraction);
+        //}
+
+        CreateIssue();
+
     }
+
+    public void CreateIssue()
+    {
+        m_currentTimeTillIssue += Time.deltaTime;
+
+        if (m_currentTimeTillIssue > m_TimeTillNextIssue)
+        {
+            int value = Random.Range(0, m_machineScripts.Length);
+
+            if (!m_machineScripts[value].m_isFixed)
+            {
+                m_machineScripts[value].BreakDown();
+            }
+
+            m_currentTimeTillIssue = 0;
+            m_TimeTillNextIssue = Random.Range(20f, 30f);
+        }
+
+    }
+
+
 }

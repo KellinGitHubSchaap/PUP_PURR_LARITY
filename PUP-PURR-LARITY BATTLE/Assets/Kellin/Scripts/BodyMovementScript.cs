@@ -25,6 +25,7 @@ public class BodyMovementScript : MonoBehaviour
     [Header("Outside of Body Settings")]
     public Transform[] m_borderPoints;  // Points where the body can move freely 
     public Transform m_target;          // Target for the Body to walk to
+    public MachineScript m_machineTarget;  // Machine Target for the Body to walk to
 
     public enum CatState { Wandering, GoingToFixSpot, Fixing, Distracted, IsPlaying }
     public CatState m_catState;     // State of the cat
@@ -66,7 +67,10 @@ public class BodyMovementScript : MonoBehaviour
                 GoingToFixSpotState();
                 break;
             case CatState.Fixing:
-
+                if (m_animator.GetInteger("catAnimState") != 2)
+                {
+                    m_animator.SetInteger("catAnimState", 2);
+                }
                 FixingState();
                 break;
             case CatState.Distracted:
@@ -140,7 +144,7 @@ public class BodyMovementScript : MonoBehaviour
 
         if (m_canFlip)
         {
-            if (m_currentFlipTimer > m_pickedTime || transform.position.x < m_borderPoints[0].position.x | transform.position.x > m_borderPoints[1].position.x)
+            if (m_currentFlipTimer > m_pickedTime || transform.position.x < m_borderPoints[0].position.x || transform.position.x > m_borderPoints[1].position.x)
             {
                 m_canFlip = false;
                 StartCoroutine(FlipBodyAnimation());
@@ -155,21 +159,22 @@ public class BodyMovementScript : MonoBehaviour
         MoveBody();
         m_currentFlipTimer = 0;
 
-        if (Vector3.Distance(transform.position, m_target.position) < 1)
+        if (Vector3.Distance(transform.position, m_machineTarget.transform.position) < 1.25)
         {
             m_catState = CatState.Fixing;
+            m_machineTarget.StartFixing();
         }
     }
 
     // Set the target position to be that of the givenMachine that needs fixing + Change cat state
-    public void MoveToBrokenMachine(Transform givenMachine)
+    public void MoveToBrokenMachine(MachineScript givenMachine)
     {
         m_catState = CatState.GoingToFixSpot;
 
-        m_target = givenMachine;
+        m_machineTarget = givenMachine;
         m_currentRotationSpeed = 1.2f;
 
-        if (transform.position.x > m_target.position.x & !m_isFlipped || transform.position.x < m_target.position.x & m_isFlipped)
+        if (transform.position.x > m_machineTarget.transform.position.x & !m_isFlipped || transform.position.x < m_machineTarget.transform.position.x & m_isFlipped)
         {
             m_canFlip = false;
             StartCoroutine(FlipBodyAnimation());
@@ -183,9 +188,9 @@ public class BodyMovementScript : MonoBehaviour
     {
         m_currentFlipTimer = 0;
 
-        if (m_target != null)
+        if (m_machineTarget != null)
         {
-            m_target = null;
+            m_machineTarget = null;
         }
     }
 
@@ -198,7 +203,7 @@ public class BodyMovementScript : MonoBehaviour
         if (Vector3.Distance(transform.position, m_target.position) < 1)
         {
             m_catState = CatState.IsPlaying;
-            m_target = null;
+            m_machineTarget = null;
             m_isFocused = false;
         }
     }
