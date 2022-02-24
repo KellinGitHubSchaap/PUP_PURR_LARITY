@@ -72,10 +72,10 @@ public class Satellite : MonoBehaviour
         switch (Type)
         {
             case SatelliteType.CatDog:
-                ScoreManager.instance.UpdateCatDogBar(-10, 10);
+                // ScoreManager.instance.UpdateCatDogBar(-10, 10);
                 break;
             case SatelliteType.BirdFish:
-                ScoreManager.instance.UpdateCatDogBar(20, -15);
+                // ScoreManager.instance.UpdateCatDogBar(20, -15);
                 break;
         }
         

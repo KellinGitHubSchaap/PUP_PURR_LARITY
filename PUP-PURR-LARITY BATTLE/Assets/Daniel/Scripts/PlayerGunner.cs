@@ -1,11 +1,15 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerGunner : MonoBehaviour
 {
+    public static bool canShoot = true;
+    
     [SerializeField] private ObjectPool bulletPool;
-    [SerializeField] private Texture2D cursor;
     [SerializeField] private float cooldownTime;
-
+    [SerializeField] private Transform crosshair;
+    
     private float _cooldownTimer;
     private Camera _camera;
 
@@ -16,18 +20,20 @@ public class PlayerGunner : MonoBehaviour
 
     private void Update()
     {
+        crosshair.position = (Vector2)_camera.ScreenToWorldPoint(Input.mousePosition);
+        
         if (_cooldownTimer > 0)
         {
             _cooldownTimer -= Time.deltaTime;
             return;
         }
         
+        if (!canShoot) return;
+        
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             Shoot();
             _cooldownTimer = cooldownTime;
-
-            Debug.Log("Dog Shot");
         }
     }
 
@@ -40,11 +46,11 @@ public class PlayerGunner : MonoBehaviour
 
     private void OnEnable()
     {
-        Cursor.SetCursor(cursor, Vector2.one * 50, CursorMode.ForceSoftware);
+        Cursor.visible = false;
     }
 
     private void OnDisable()
     {
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        Cursor.visible = true;
     }
 }
