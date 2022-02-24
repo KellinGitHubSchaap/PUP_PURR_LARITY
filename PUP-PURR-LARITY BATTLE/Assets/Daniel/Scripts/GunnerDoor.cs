@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunnerPanel : MonoBehaviour
+public class GunnerDoor : MonoBehaviour
 {
     [SerializeField] private Dog dog;
     

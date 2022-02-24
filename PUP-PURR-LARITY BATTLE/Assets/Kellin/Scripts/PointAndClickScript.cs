@@ -32,6 +32,17 @@ public class PointAndClickScript : MonoBehaviour
                     SoundManager.instance.PlayRefocusSoundEffect(0);
                 }
             }
+
+            if (hoverHit.collider.CompareTag("Dog"))
+            {
+                if (!Input.GetMouseButtonDown(0)) return;
+                
+                var dog = hoverHit.collider.GetComponent<Dog>();
+                if (dog.state != DogState.Playing) return;
+                
+                dog.EnterState(DogState.Idle);
+                SoundManager.instance.PlayRefocusSoundEffect(1);
+            }
         }
     }
 }
