@@ -20,14 +20,20 @@ public class Dog : MonoBehaviour
     [SerializeField] private Transform rightWall;
 
     [SerializeField] private Transform gunnerWalkSpot;
-    [SerializeField] private Transform idleWalksSpot;
+    [SerializeField] private Transform idleWalkSpot;
 
     private CharacterMovement _movement;
     private float _idleTimer;
     private Transform _transform;
+    private Animator _animator;
+    
+    private static readonly int Idle = Animator.StringToHash("Idle");
+    private static readonly int Play = Animator.StringToHash("Play");
+    private static readonly int Walk = Animator.StringToHash("Walk");
 
     private void Awake()
     {
+        _animator = GetComponent<Animator>();
         _transform = transform;
         _movement = GetComponent<CharacterMovement>();
     }
@@ -42,7 +48,7 @@ public class Dog : MonoBehaviour
         switch (state)
         {
             case DogState.Idle:
-                Idling();
+                UpdateIdle();
                 break;
             default:
                 return;
@@ -56,16 +62,17 @@ public class Dog : MonoBehaviour
         switch (newState)
         {
             case DogState.Idle:
-                //TODO: Trigger idle animation
-                _idleTimer = Random.Range(2f, 4f);
+                _animator.SetTrigger(Idle);
+                _idleTimer = Random.Range(.5f, 1.5f);
                 break;
             case DogState.Playing:
-                //TODO: Trigger playing animation
+                _animator.SetTrigger(Play);
                 break;
             case DogState.Shooting:
+                _animator.SetTrigger(Idle);
                 break;
             case DogState.Walking:
-                //TODO: Trigger walking animation
+                _animator.SetTrigger(Walk);
                 break;
         }
     }
@@ -84,17 +91,17 @@ public class Dog : MonoBehaviour
         callbacks.Add(EnterShootState);
         EnterState(DogState.Walking);
         void GunnerWalk() => _movement.MoveTo(gunnerWalkSpot.position, callbacks);
-        _movement.MoveTo(idleWalksSpot.position, new List<Action>() {GunnerWalk});
+        _movement.MoveTo(idleWalkSpot.position, new List<Action>() {GunnerWalk});
     }
 
     [ContextMenu("ExitGunnerMode")]
     public void ExitGunnerMode()
     {
         void EnterIdleState() => EnterState(DogState.Idle);
-        _movement.MoveTo(idleWalksSpot.position, new List<Action>() {EnterIdleState});
+        _movement.MoveTo(idleWalkSpot.position, new List<Action>() {EnterIdleState});
     }
 
-    private void Idling()
+    private void UpdateIdle()
     {
         _idleTimer -= Time.deltaTime;
         if (_idleTimer > 0) return;
