@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MachineScript : MonoBehaviour
 {
-    public BodyMovementScript m_movementScript;
+    public CatMovementScript m_movementScript;
     public bool m_isFixed = false;
     public bool m_isGettingFixed = false;
 
@@ -41,7 +41,7 @@ public class MachineScript : MonoBehaviour
         m_isFixed = true;
         m_isGettingFixed = false;
 
-        m_movementScript.m_catState = BodyMovementScript.CatState.Wandering;
+        m_movementScript.m_catState = CatMovementScript.CatState.Wandering;
 
         m_exclamationPoint.SetActive(false);
 

@@ -26,7 +26,6 @@ public class WorldScript : MonoBehaviour
     public float m_timeTillMakeDistraction = 10f;   // Time till a new distraction is thrown into the world
     public float m_currentMakeDistractionTimer;     // Current time for when a new distraction is made
 
-    public Transform m_positionOfDistraction;       // Where is the distraction coming from
 
     [Header("Machines Settings")]
     public MachineScript[] m_machineScripts;
@@ -35,7 +34,7 @@ public class WorldScript : MonoBehaviour
     public float m_currentTimeTillIssue;
 
     [Header("Scripts")]
-    public BodyMovementScript m_catMovementScript;
+    public CatMovementScript m_catMovementScript;
 
     private void Start()
     {
@@ -68,6 +67,4 @@ public class WorldScript : MonoBehaviour
         }
 
     }
-
-
 }

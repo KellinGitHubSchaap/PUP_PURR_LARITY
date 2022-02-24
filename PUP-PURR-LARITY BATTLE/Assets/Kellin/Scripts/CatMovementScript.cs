@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class BodyMovementScript : MonoBehaviour
+public class CatMovementScript : MonoBehaviour
 {
     [Header("Body Movement")]
     public float m_movementSpeed = 1;                           // Speed of the body
@@ -16,6 +16,7 @@ public class BodyMovementScript : MonoBehaviour
     public Vector2 m_timeTillFlip;      // Time till the body flips around
     public float m_pickedTime;          // Time that has been chosen for when a flip will occur 
     public float m_currentFlipTimer;    // Current time
+    public bool m_randomFlipTime = false;   // To make the flip time no longer randomized
 
     public bool m_isFlipped = false;    // Is the body already flipped?
     private bool m_canFlip = true;      // Can the get flip around?
@@ -27,16 +28,18 @@ public class BodyMovementScript : MonoBehaviour
     public Transform m_target;          // Target for the Body to walk to
     public MachineScript m_machineTarget;  // Machine Target for the Body to walk to
 
+    [Header("Becomings Distracted Settings")]
+    public float m_timeTillBecomingDistracted = 20f;
+    public float m_currentTimerBeforeGettingDistracted;
+    public Transform m_positionOfDistraction;           // Position of where the distraction is coming from
+
     public enum CatState { Wandering, GoingToFixSpot, Fixing, Distracted, IsPlaying }
+    [Header("Playing State Settings")]
     public CatState m_catState;     // State of the cat
 
-    [Header("Playing State Settings")]
     public float m_timeTillDonePlaying = 7;     // How long untill they stop playing
     public float m_currentTimePlaying;          // Current time that the cat spent playing
     public bool m_isFocused = true;             // Check to see if body is still focused
-
-    [Header("Debug Variables")]
-    public bool m_randomFlipTime = false;   // To make the flip time no longer randomized
 
     void Start()
     {
@@ -88,6 +91,8 @@ public class BodyMovementScript : MonoBehaviour
                 PlayingState();
                 break;
         }
+
+        BecomeDistracted();
     }
 
     // Inside of this region there are Move functions
@@ -193,18 +198,25 @@ public class BodyMovementScript : MonoBehaviour
             m_machineTarget = null;
         }
     }
-
-    // Move the body to the place where the distraction happens 
-    private void DistractedState()
+    
+    private void BecomeDistracted()
     {
-        MoveBody();
-        m_currentFlipTimer = 0;
-
-        if (Vector3.Distance(transform.position, m_target.position) < 1)
+        if (m_catState != CatState.Distracted && m_catState != CatState.IsPlaying)
         {
-            m_catState = CatState.IsPlaying;
-            m_machineTarget = null;
-            m_isFocused = false;
+            m_currentTimerBeforeGettingDistracted += Time.deltaTime;
+
+            if (m_currentTimerBeforeGettingDistracted > m_timeTillBecomingDistracted)
+            {
+                m_positionOfDistraction.position = new Vector3(Random.Range(m_borderPoints[0].position.x, m_borderPoints[1].position.x), -1.5f, 1.25f);
+
+                FindDistraction(m_positionOfDistraction);
+                m_timeTillBecomingDistracted = Random.Range(20f, 50f);
+                m_currentTimerBeforeGettingDistracted = 0;
+            }
+        }
+        else
+        {
+            m_currentTimerBeforeGettingDistracted = 0;
         }
     }
 
@@ -228,6 +240,22 @@ public class BodyMovementScript : MonoBehaviour
 
         m_currentRotationSpeed = m_setRotationSpeed;
     }
+
+    // Move the body to the place where the distraction happens 
+    private void DistractedState()
+    {
+        MoveBody();
+        m_currentFlipTimer = 0;
+
+        if (Vector3.Distance(transform.position, m_target.position) < 1)
+        {
+            m_catState = CatState.IsPlaying;
+            m_machineTarget = null;
+            m_isFocused = false;
+        }
+    }
+
+
 
     // If the cat or dog are no longer focused they are going to play with their distraction
     private void PlayingState()
