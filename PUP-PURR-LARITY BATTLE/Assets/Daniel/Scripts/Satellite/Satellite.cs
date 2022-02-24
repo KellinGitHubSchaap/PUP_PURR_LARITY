@@ -42,6 +42,7 @@ public class Satellite : MonoBehaviour
         _lifeTimer += Time.deltaTime;
         if (_lifeTimer >= lifeTime)
         {
+            OnExpiration();
             gameObject.SetActive(false);
         }
     }
@@ -64,6 +65,18 @@ public class Satellite : MonoBehaviour
             case SatelliteType.BirdFish:
                 _spriteRenderer.sprite = birdFishSprite;
                 break;
+        }
+    }
+   
+    private void OnExpiration()
+    {
+        if (Type == SatelliteType.BirdFish)
+        {
+            ScoreManager.instance.UpdateCatDogBar(-1, 0);
+        }
+        else
+        {
+            ScoreManager.instance.UpdateCatDogBar(2, -1);
         }
     }
     

@@ -20,6 +20,11 @@ public class SatelliteManager : Singleton<SatelliteManager>
         _camera = Camera.main;
     }
 
+    private void Start()
+    {
+        StartSatelliteSpawning();
+    }
+
     private void OnEnable()
     {
         StartSatelliteSpawning();
