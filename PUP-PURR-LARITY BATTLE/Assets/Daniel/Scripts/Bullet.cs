@@ -33,11 +33,9 @@ public class Bullet : MonoBehaviour
             _lifeTimer += Time.deltaTime;
             _transform.localScale -= Vector3.one / lifeTime * Time.deltaTime;
 
-            if (_lifeTimer > lifeTime / 2 && _canHit)
-            {
-                _collider.enabled = true;
-                Invoke(nameof(GoPast), 0.05f);
-            }
+            if (!(_lifeTimer > lifeTime / 2) || !_canHit) return;
+            _collider.enabled = true;
+            Invoke(nameof(GoPast), 0.05f);
         }
         else
         {
