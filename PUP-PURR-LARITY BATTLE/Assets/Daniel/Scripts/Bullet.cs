@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
         _canHit = true;
         _lifeTimer = 0;
         _transform.localScale = Vector3.one;
-        _transform.localPosition = position;
+        _transform.position = position;
         sprite.sortingOrder = 1;
     }
 
