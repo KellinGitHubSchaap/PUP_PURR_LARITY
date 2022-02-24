@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Kellin/Scenes/Main Game loop/Main Scene.unity
+    guid: 944450b9d55d80f4e9cf4e32d14e48ae
+  - enabled: 1
+    path: Assets/Kellin/Scenes/Main Game loop/PlayerLose.unity
+    guid: 6b72fb2cd9d8c5b47a2e754ea38168bd
+  - enabled: 1
+    path: Assets/Kellin/Scenes/Main Game loop/PlayerWon.unity
+    guid: 34415944849998749a8ff683457ba8bd
   m_configObjects: {}

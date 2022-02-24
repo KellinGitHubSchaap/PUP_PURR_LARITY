@@ -5,7 +5,6 @@ using UnityEngine;
 public class WorldScript : MonoBehaviour
 {
     public static WorldScript instance;
-
     private void Awake()
     {
         if (instance == null)
@@ -32,11 +31,8 @@ public class WorldScript : MonoBehaviour
     [Header("Machines Settings")]
     public MachineScript[] m_machineScripts;
 
-
     public float m_TimeTillNextIssue = 20f;
     public float m_currentTimeTillIssue;
-
-
 
     [Header("Scripts")]
     public BodyMovementScript m_catMovementScript;
@@ -51,13 +47,7 @@ public class WorldScript : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    m_catMovementScript.FindDistraction(m_positionOfDistraction);
-        //}
-
         CreateIssue();
-
     }
 
     public void CreateIssue()
