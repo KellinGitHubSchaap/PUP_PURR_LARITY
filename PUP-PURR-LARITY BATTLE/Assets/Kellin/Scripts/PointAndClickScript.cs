@@ -5,7 +5,7 @@ using UnityEngine;
 public class PointAndClickScript : MonoBehaviour
 {
     private Camera m_cam;       // The camera
-    public BodyMovementScript m_bodyMovementScript;
+    public CatMovementScript m_bodyMovementScript;
 
     [Header("Camera Movement Settings")]
     public float m_movementSpeed = 1;
@@ -32,11 +32,11 @@ public class PointAndClickScript : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hoverHit))
         {
-            if (hoverHit.collider.CompareTag("Cat") && hoverHit.collider.gameObject.GetComponent<BodyMovementScript>().m_catState == BodyMovementScript.CatState.IsPlaying)
+            if (hoverHit.collider.CompareTag("Cat") && hoverHit.collider.gameObject.GetComponent<CatMovementScript>().m_catState == CatMovementScript.CatState.IsPlaying)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    hoverHit.collider.gameObject.GetComponent<BodyMovementScript>().m_isFocused = true;
+                    hoverHit.collider.gameObject.GetComponent<CatMovementScript>().m_isFocused = true;
                     SoundManager.instance.PlayRefocusSoundEffect(0);
                 }
             }
