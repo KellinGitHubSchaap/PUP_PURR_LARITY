@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum LeftRight
@@ -22,13 +23,19 @@ public class CharacterMovement : MonoBehaviour
         _transform = transform;
     }
 
-    [ContextMenu("MoveTest")]
-    public void MoveTest()
+    [ContextMenu("MoveLeft")]
+    public void MoveLeft()
     {
-        MoveTo(_transform.position + Vector3.left * 10);
+        MoveTo(_transform.position + Vector3.left * 5);
+    }
+    
+    [ContextMenu("MoveRight")]
+    public void MoveRight()
+    {
+        MoveTo(_transform.position + Vector3.right * 5);
     }
 
-    public void MoveTo(Vector3 position)
+    public void MoveTo(Vector3 position, List<Action> callbacks = null)
     {
         if (_moveToCoroutine != null)
         {
@@ -40,8 +47,8 @@ public class CharacterMovement : MonoBehaviour
         {
             StartCoroutine(FlipCoroutine());
         }
-
-        _moveToCoroutine = StartCoroutine(MoveToCoroutine(position));
+        
+        _moveToCoroutine = StartCoroutine(MoveToCoroutine(position, callbacks));
     }
 
     private IEnumerator FlipCoroutine()
@@ -58,10 +65,11 @@ public class CharacterMovement : MonoBehaviour
         }
 
         _transform.rotation = targetRotation;
+        facing = facing == LeftRight.Left ? LeftRight.Right : LeftRight.Left;
         yield return null;
     }
 
-    private IEnumerator MoveToCoroutine(Vector3 position)
+    private IEnumerator MoveToCoroutine(Vector3 position, List<Action> callbacks = null)
     {
         var direction = (position - _transform.position).normalized;
         var sqrDistance = (_transform.position - position).sqrMagnitude;
@@ -72,6 +80,12 @@ public class CharacterMovement : MonoBehaviour
             _transform.position += direction * moveSpeed * Time.deltaTime;
             yield return null;
         }
+
+        if (callbacks != null)
+            foreach (var callback in callbacks)
+            {
+                callback?.Invoke();
+            }
 
         yield return null;
     }
