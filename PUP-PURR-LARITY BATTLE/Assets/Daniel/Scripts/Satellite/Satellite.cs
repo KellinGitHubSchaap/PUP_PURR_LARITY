@@ -9,8 +9,8 @@ public class Satellite : MonoBehaviour
     [SerializeField] private Sprite birdFishSprite;
     [SerializeField] private float lifeTime;
 
-    private float _lifeTimer;
     private SpriteRenderer _spriteRenderer;
+    private float _lifeTimer;
     private Vector2 _direction;
     private Transform _transform;
     

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -17,6 +18,16 @@ public class SatelliteManager : Singleton<SatelliteManager>
     {
         base.Awake();
         _camera = Camera.main;
+    }
+
+    private void OnEnable()
+    {
+        StartSatelliteSpawning();
+    }
+
+    private void OnDisable()
+    {
+        StopSatelliteSpawning();
     }
 
     [ContextMenu("StartSpawning")]
