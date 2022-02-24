@@ -27,10 +27,24 @@ public class ScoreManager : MonoBehaviour
     public float m_currentCatScore = 0;
     public float m_currentBirdScore = 0;
 
+    private float m_timer;
+
     private void Start()
     {
         UpdateCatDogBar(0,0);
     }
+
+    private void Update()
+    {
+        m_timer += Time.deltaTime;
+
+        if(m_timer > 5f)
+        {
+            UpdateCatDogBar(-2, 4);
+            m_timer = 0;
+        }
+    }
+
 
     // Update the visual Chart seen in the office
     public void UpdateCatDogBar(int dogValue, int fishValue)
