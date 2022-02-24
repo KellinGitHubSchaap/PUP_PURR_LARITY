@@ -13,27 +13,24 @@ public class MachineScript : MonoBehaviour
         if (!m_isFixed && m_movementScript.m_isFocused)
         {
             Debug.Log("Cat goes fixing");
-            m_movementScript.MoveToBrokenMachine(this.gameObject.transform);
+            m_movementScript.MoveToBrokenMachine(this);
         }
     }
-
-    private void Update()
+    
+    public void StartFixing()
     {
-        if (m_movementScript.m_catState == BodyMovementScript.CatState.Fixing && !m_isGettingFixed)
-        {
-            m_isGettingFixed = true;
-            StartCoroutine(FixMachine());
-        }
+        StartCoroutine(FixMachine());
     }
 
-    public IEnumerator FixMachine()
+    private IEnumerator FixMachine()
     {
         yield return new WaitForSeconds(3);
         tag = "Fixed";
         GetComponent<MeshRenderer>().material = WorldScript.instance.m_machineFixedMaterial;
+
         m_isFixed = true;
+        m_isGettingFixed = false;
 
         m_movementScript.m_catState = BodyMovementScript.CatState.Wandering;
-
     }
 }

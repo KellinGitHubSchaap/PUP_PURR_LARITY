@@ -29,6 +29,9 @@ public class WorldScript : MonoBehaviour
 
     public Transform m_positionOfDistraction;       // Where is the distraction coming from
 
+    [Header("Machines")]
+    public MachineScript[] m_machineScripts;
+
     [Header("Scripts")]
     public BodyMovementScript m_catMovementScript;
 
@@ -47,4 +50,7 @@ public class WorldScript : MonoBehaviour
             m_catMovementScript.FindDistraction(m_positionOfDistraction);
         }
     }
+
+    
+
 }
