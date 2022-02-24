@@ -9,6 +9,8 @@ TagManager:
   - Cat
   - Dog
   - GunnerPanel
+  - Satellite
+  - Cockpit Entry
   layers:
   - Default
   - TransparentFX

@@ -51,6 +51,14 @@ public class PointAndClickScript : MonoBehaviour
                 dog.EnterState(DogState.Idle);
                 SoundManager.instance.PlayRefocusSoundEffect(1);
             }
+
+            if(hoverHit.collider.CompareTag("Cockpit Entry"))
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    StartCoroutine(MoveCamera(4));
+                }
+            }
         }
 
         if (m_roomTransitionIsDone)
