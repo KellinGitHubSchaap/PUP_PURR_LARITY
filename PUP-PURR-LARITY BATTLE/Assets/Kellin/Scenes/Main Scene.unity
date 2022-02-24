@@ -194,6 +194,14 @@ PrefabInstance:
       propertyPath: m_birdFishBar
       value: 
       objectReference: {fileID: 165344059}
+    - target: {fileID: 3639785896925625439, guid: 57f8b5c6436f1fb45a6cacd6285ee542, type: 3}
+      propertyPath: m_currentCatScore
+      value: 345
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639785896925625439, guid: 57f8b5c6436f1fb45a6cacd6285ee542, type: 3}
+      propertyPath: m_currentBirdScore
+      value: 345
+      objectReference: {fileID: 0}
     - target: {fileID: 3639785897610533170, guid: 57f8b5c6436f1fb45a6cacd6285ee542, type: 3}
       propertyPath: m_SizeDelta.y
       value: 146
