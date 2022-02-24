@@ -10,11 +10,17 @@ public class MachineScript : MonoBehaviour
 
     public GameObject m_exclamationPoint;
 
+    public bool m_isTheComputer = false;
+    public Sprite m_blueScreenOfDeath;
+    public Sprite m_regularScreen;
+    public GameObject m_computerSprite;
+
     private void OnMouseDown()
     {
-        if (!m_isFixed && m_movementScript.m_isFocused)
+        if (!m_isFixed && m_movementScript.m_isFocused && m_exclamationPoint.activeInHierarchy && !m_isGettingFixed)
         {
             Debug.Log("Cat goes fixing");
+            m_isGettingFixed = true;
             m_movementScript.MoveToBrokenMachine(this);
         }
     }
@@ -26,6 +32,12 @@ public class MachineScript : MonoBehaviour
 
     public void BreakDown()
     {
+        if (m_isTheComputer)
+        {
+            m_computerSprite.GetComponent<SpriteRenderer>().sprite = m_blueScreenOfDeath;
+        }
+
+
         m_isFixed = false;
         m_exclamationPoint.SetActive(true);
         tag = "Needs Fixing";
@@ -44,6 +56,11 @@ public class MachineScript : MonoBehaviour
         m_movementScript.m_catState = CatMovementScript.CatState.Wandering;
 
         m_exclamationPoint.SetActive(false);
+
+        if (m_isTheComputer)
+        {
+            m_computerSprite.GetComponent<SpriteRenderer>().sprite = m_regularScreen;
+        }
 
         yield return new WaitForSeconds(2);
         m_isFixed = false;

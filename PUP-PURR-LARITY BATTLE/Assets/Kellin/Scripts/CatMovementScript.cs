@@ -164,8 +164,6 @@ public class CatMovementScript : MonoBehaviour
         MoveBody();
         m_currentFlipTimer = 0;
 
-
-
         if (Vector3.Distance(transform.position, m_machineTarget.transform.position) < 2.5f)
         {
             m_catState = CatState.Fixing;
@@ -204,7 +202,7 @@ public class CatMovementScript : MonoBehaviour
     
     private void BecomeDistracted()
     {
-        if (m_catState != CatState.Distracted && m_catState != CatState.IsPlaying)
+        if (m_catState == CatState.Wandering || m_catState == CatState.GoingToFixSpot)
         {
             m_currentTimerBeforeGettingDistracted += Time.deltaTime;
 
@@ -272,8 +270,8 @@ public class CatMovementScript : MonoBehaviour
 
         if (m_currentTimePlaying > m_timeTillDonePlaying || m_isFocused)
         {
+            if (!m_isFocused) { m_isFocused = true; }
             m_currentTimePlaying = 0;
-
             m_catState = CatState.Wandering;
         }
     }

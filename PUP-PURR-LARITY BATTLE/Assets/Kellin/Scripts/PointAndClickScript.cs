@@ -80,8 +80,6 @@ public class PointAndClickScript : MonoBehaviour
                 StartCoroutine(MoveCamera(3));
             }
         }
-
-
     }
 
     private IEnumerator MoveCamera(int roomID)
