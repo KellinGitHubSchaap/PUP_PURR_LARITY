@@ -16,6 +16,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float moveSpeed;
 
     private Coroutine _moveToCoroutine;
+    private Coroutine _flipCoroutine;
     private Transform _transform;
 
     private void Awake()
@@ -45,7 +46,11 @@ public class CharacterMovement : MonoBehaviour
         var direction = position.x > _transform.position.x ? LeftRight.Right : LeftRight.Left;
         if (facing != direction)
         {
-            StartCoroutine(FlipCoroutine());
+            if (_flipCoroutine != null)
+            {
+                StopCoroutine(_flipCoroutine);
+            }
+            _flipCoroutine = StartCoroutine(FlipCoroutine());
         }
         
         _moveToCoroutine = StartCoroutine(MoveToCoroutine(position, callbacks));
@@ -87,6 +92,7 @@ public class CharacterMovement : MonoBehaviour
                 callback?.Invoke();
             }
 
+        Debug.Log("finished move coroutine");
         yield return null;
     }
 }

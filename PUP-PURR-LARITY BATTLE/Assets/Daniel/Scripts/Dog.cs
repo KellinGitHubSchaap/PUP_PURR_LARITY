@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum DogState
 {
     Idle,
-    IsPlaying,
+    Playing,
     Shooting,
     Walking
 }
@@ -13,21 +14,35 @@ public enum DogState
 public class Dog : MonoBehaviour
 {
     public DogState state;
+    [SerializeField] private float playingChance;
+    [SerializeField] private Transform leftWall;
+    [SerializeField] private Transform rightWall;
+    
     private CharacterMovement _movement;
+    private float _idleTimer;
+    private Transform _transform;
 
     private void Awake()
     {
+        _transform = transform;
         _movement = GetComponent<CharacterMovement>();
     }
 
-    public void HandleInteract(GameObject obj, List<Action> callbacks)
+    private void Start()
     {
-        if (state == DogState.IsPlaying) return;
-        if (!obj.CompareTag("GunnerPanel")) return;
-        
-        void State() => EnterState(DogState.Shooting);
-        callbacks.Add(State);
-        _movement.MoveTo(obj.transform.position, callbacks);
+        EnterState(DogState.Idle);
+    }
+
+    private void Update()
+    {
+        switch (state)
+        {
+            case DogState.Idle:
+                Idling();
+                break;
+            default:
+                return;
+        }
     }
 
     private void EnterState(DogState newState)
@@ -37,28 +52,57 @@ public class Dog : MonoBehaviour
         switch (newState)
         {
             case DogState.Idle:
+                //TODO: Trigger idle animation
+                _idleTimer = Random.Range(2f, 4f);
                 break;
-            case DogState.IsPlaying:
+            case DogState.Playing:
+                //TODO: Trigger playing animation
                 break;
             case DogState.Shooting:
                 break;
             case DogState.Walking:
+                //TODO: Trigger walking animation
                 break;
         }
     }
-
-    private void Shoot()
+    
+  public void HandleInteract(GameObject obj, List<Action> callbacks)
     {
-        throw new NotImplementedException();
+        if (state == DogState.Playing) return;
+        if (!obj.CompareTag("GunnerPanel")) return;
+        
+        void State() => EnterState(DogState.Shooting);
+        callbacks.Add(State);
+        EnterState(DogState.Walking);
+        _movement.MoveTo(obj.transform.position, callbacks);
     }
-
-    private void Distract()
-    {
-        throw new NotImplementedException();
-    }
-
+  
     private void Idling()
     {
-        throw new NotImplementedException();
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer > 0) return;
+
+        var rand = Random.Range(0f, 1f);
+        
+        if (rand < playingChance)
+        {
+            EnterState(DogState.Playing);
+        }
+        else
+        {
+            RandomWander();
+        }
+    }
+
+    private void RandomWander()
+    {
+        EnterState(DogState.Walking);
+
+        var randomX = Random.Range(leftWall.position.x, rightWall.position.x);
+        var randomWanderSpot = new Vector3(randomX, _transform.position.y, transform.position.z);
+
+        void State() => EnterState(DogState.Idle);
+        var callbacks = new List<Action>() {State};
+        _movement.MoveTo(randomWanderSpot, callbacks);
     }
 }
