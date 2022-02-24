@@ -26,6 +26,8 @@ public class PlayerGunner : MonoBehaviour
         {
             Shoot();
             _cooldownTimer = cooldownTime;
+
+            Debug.Log("Dog Shot");
         }
     }
 
