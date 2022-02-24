@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pooledObjects: []
   objectToPool: {fileID: 7257918149646670160, guid: 87d7f1f6df030c040a7b08cda7b4ae66, type: 3}
-  amountToPool: 20
+  amountToPool: 50
 --- !u!1 &4453647392263573883
 GameObject:
   m_ObjectHideFlags: 0

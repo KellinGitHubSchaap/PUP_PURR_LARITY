@@ -90,8 +90,8 @@ public class Dog : MonoBehaviour
         void EnterShootState() => EnterState(DogState.Shooting);
         callbacks.Add(EnterShootState);
         EnterState(DogState.Walking);
-        void GunnerWalk() => _movement.MoveTo(gunnerWalkSpot.position, callbacks);
-        _movement.MoveTo(idleWalkSpot.position, new List<Action>() {GunnerWalk});
+        void MoveToGunner() => _movement.MoveTo(gunnerWalkSpot.position, callbacks);
+        _movement.MoveTo(idleWalkSpot.position, new List<Action>() {MoveToGunner});
     }
 
     [ContextMenu("ExitGunnerMode")]
