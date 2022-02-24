@@ -39,6 +39,7 @@ public class PlayerGunner : MonoBehaviour
 
     private void Shoot()
     {
+        SoundManager.instance.PlayShootSound();
         var bullet = bulletPool.GetObject();
         bullet.SetActive(true);
         bullet.GetComponent<Bullet>().Init( _camera.ScreenToWorldPoint(Input.mousePosition));

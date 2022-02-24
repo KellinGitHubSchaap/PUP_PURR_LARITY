@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunnerDoor : MonoBehaviour
+public class GunnerActivation : MonoBehaviour
 {
     [SerializeField] private Dog dog;
+    [SerializeField] private GameObject gunnerView;
     
     public void OnMouseDown()
     {
@@ -15,7 +16,6 @@ public class GunnerDoor : MonoBehaviour
 
     public void EnterShooting()
     {
-        Debug.Log("Gonna enter shooting mode");
-        //TODO: Enter satellite shooting mode
+        gunnerView.SetActive(true);
     }
 }

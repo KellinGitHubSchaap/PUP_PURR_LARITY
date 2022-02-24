@@ -29,7 +29,7 @@ public class CharacterMovement : MonoBehaviour
     {
         MoveTo(_transform.position + Vector3.left * 5);
     }
-    
+
     [ContextMenu("MoveRight")]
     public void MoveRight()
     {
@@ -50,17 +50,20 @@ public class CharacterMovement : MonoBehaviour
             {
                 StopCoroutine(_flipCoroutine);
             }
-            _flipCoroutine = StartCoroutine(FlipCoroutine());
+
+            _flipCoroutine = StartCoroutine(FlipCoroutine(direction));
         }
-        
+
         _moveToCoroutine = StartCoroutine(MoveToCoroutine(position, callbacks));
     }
 
-    private IEnumerator FlipCoroutine()
+    private IEnumerator FlipCoroutine(LeftRight direction)
     {
         var startRotation = _transform.rotation;
-        var targetRotation = _transform.rotation * Quaternion.Euler(0, 180, 0);
-        
+        var targetRotation = direction == LeftRight.Left
+            ? Quaternion.Euler(Vector3.up * 180)
+            : Quaternion.Euler(Vector3.zero);
+
         float t = 0;
         while (t < 1)
         {
@@ -78,7 +81,7 @@ public class CharacterMovement : MonoBehaviour
     {
         var defaultY = _transform.position.y;
         position = new Vector3(position.x, defaultY, position.z);
-        
+
         var direction = (position - _transform.position).normalized;
         var sqrDistance = (_transform.position - position).sqrMagnitude;
 

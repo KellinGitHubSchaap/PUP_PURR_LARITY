@@ -20,6 +20,7 @@ public class SoundManager : MonoBehaviour
     [Header("Sound Effects")]
     public AudioSource m_soundEffectSource;
     public AudioClip[] m_refocusClips;
+    public AudioClip m_shootClip;
 
     [Header("Background Music")]
     public AudioSource m_musicSource;
@@ -35,4 +36,8 @@ public class SoundManager : MonoBehaviour
         m_soundEffectSource.PlayOneShot(m_refocusClips[music]);
     }
 
+    public void PlayShootSound()
+    {
+        m_soundEffectSource.PlayOneShot(m_shootClip);
+    }
 }
