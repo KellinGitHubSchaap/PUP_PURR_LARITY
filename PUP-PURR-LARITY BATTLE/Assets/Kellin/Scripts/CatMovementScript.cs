@@ -164,10 +164,13 @@ public class CatMovementScript : MonoBehaviour
         MoveBody();
         m_currentFlipTimer = 0;
 
-        if (Vector3.Distance(transform.position, m_machineTarget.transform.position) < 1.25)
+
+
+        if (Vector3.Distance(transform.position, m_machineTarget.transform.position) < 2.5f)
         {
             m_catState = CatState.Fixing;
             m_machineTarget.StartFixing();
+            Debug.Log("LESS THAN 1.5");
         }
     }
 
