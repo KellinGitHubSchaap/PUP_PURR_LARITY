@@ -44,5 +44,9 @@ public class MachineScript : MonoBehaviour
         m_movementScript.m_catState = BodyMovementScript.CatState.Wandering;
 
         m_exclamationPoint.SetActive(false);
+
+        yield return new WaitForSeconds(2);
+        m_isFixed = false;
+
     }
 }
