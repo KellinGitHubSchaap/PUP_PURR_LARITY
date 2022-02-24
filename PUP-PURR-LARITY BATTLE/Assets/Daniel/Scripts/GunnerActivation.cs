@@ -6,6 +6,7 @@ public class GunnerActivation : MonoBehaviour
 {
     [SerializeField] private Dog dog;
     [SerializeField] private GameObject gunnerView;
+    [SerializeField] private CanvasGroup monitorCanvas;
     
     public void OnMouseDown()
     {
@@ -14,8 +15,9 @@ public class GunnerActivation : MonoBehaviour
         dog.HandleInteract(gameObject, callbacks);
     }
 
-    public void EnterShooting()
+    private void EnterShooting()
     {
         gunnerView.SetActive(true);
+        monitorCanvas.alpha = .9f;
     }
 }

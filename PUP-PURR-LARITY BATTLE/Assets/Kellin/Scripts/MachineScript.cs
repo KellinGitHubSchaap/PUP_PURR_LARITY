@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MachineType {Oil, Systems, Oxygen}
 public class MachineScript : MonoBehaviour
 {
+    public MachineType m_type;
     public CatMovementScript m_movementScript;
     public bool m_isFixed = false;
     public bool m_isGettingFixed = false;
@@ -45,6 +47,7 @@ public class MachineScript : MonoBehaviour
 
         m_exclamationPoint.SetActive(false);
 
+        MonitorManager.Instance.HandleFix(m_type);
         yield return new WaitForSeconds(2);
         m_isFixed = false;
 

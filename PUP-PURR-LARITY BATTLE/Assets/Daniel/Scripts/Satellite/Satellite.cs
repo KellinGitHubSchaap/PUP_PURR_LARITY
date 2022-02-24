@@ -8,6 +8,7 @@ public class Satellite : MonoBehaviour
     [SerializeField] private Sprite catDogSprite;
     [SerializeField] private Sprite birdFishSprite;
     [SerializeField] private float lifeTime;
+    [SerializeField] private GameObject explosion;
 
     private SpriteRenderer _spriteRenderer;
     private float _lifeTimer;
@@ -95,7 +96,8 @@ public class Satellite : MonoBehaviour
                 MonitorManager.Instance.BlinkOnce(MonitorType.BirdFish, false);
                 break;
         }
-        
+
+        Instantiate(explosion, _transform.position, Quaternion.identity);
         gameObject.SetActive(false);
     }
 }

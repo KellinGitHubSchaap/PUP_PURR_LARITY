@@ -1,5 +1,4 @@
-using System;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerGunner : MonoBehaviour
@@ -27,14 +26,11 @@ public class PlayerGunner : MonoBehaviour
             _cooldownTimer -= Time.deltaTime;
             return;
         }
-        
+
+        if (!Input.GetKeyDown(KeyCode.Mouse0)) return;
         if (!canShoot) return;
-        
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            Shoot();
-            _cooldownTimer = cooldownTime;
-        }
+        Shoot();
+        _cooldownTimer = cooldownTime;
     }
 
     private void Shoot()

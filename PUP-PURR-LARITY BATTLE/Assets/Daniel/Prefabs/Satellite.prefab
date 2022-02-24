@@ -51,6 +51,7 @@ MonoBehaviour:
   catDogSprite: {fileID: 21300000, guid: 865ae733a067cb84d861893c9504278a, type: 3}
   birdFishSprite: {fileID: 21300000, guid: e138d35ef212bbf4ca42eb80ad82266d, type: 3}
   lifeTime: 10
+  explosion: {fileID: 4401311234430190774, guid: 95de22dbf9b876342a1f3ce17198a6d6, type: 3}
 --- !u!50 &4818618448403191806
 Rigidbody2D:
   serializedVersion: 4
