@@ -8,6 +8,7 @@ TagManager:
   - Fixed
   - Cat
   - Dog
+  - GunnerPanel
   layers:
   - Default
   - TransparentFX
