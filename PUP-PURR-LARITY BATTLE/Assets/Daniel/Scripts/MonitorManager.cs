@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MonitorManager : Singleton<MonitorManager>
@@ -47,6 +48,48 @@ public class MonitorManager : Singleton<MonitorManager>
         foreach (var monitor in monitors)
         {
             monitor.RevertToDefault();
+        }
+    }
+
+    public void HandleBreakdown(MachineType type)
+    {
+        PlayerGunner.canShoot = false;
+        switch (type)
+        {
+            case MachineType.Oil:
+                BlinkRepeating(MonitorType.Oil);
+                break;
+            case MachineType.Systems:
+                BlueScreen();
+                break;
+            case MachineType.Oxygen:
+                BlinkRepeating(MonitorType.Oxygen);
+                break;
+        }
+    }
+
+    public void HandleFix(MachineType type)
+    {
+        PlayerGunner.canShoot = true;
+        switch (type)
+        {
+            case MachineType.Oil:
+                foreach (var monitor in monitors)
+                {
+                    if (monitor.type != MonitorType.Oil) continue;
+                    monitor.CancelBlink();
+                }
+                break;
+            case MachineType.Systems:
+                StopBlueScreen();
+                break;
+            case MachineType.Oxygen:
+                foreach (var monitor in monitors)
+                {
+                    if (monitor.type != MonitorType.Oxygen) continue;
+                    monitor.CancelBlink();
+                }
+                break;
         }
     }
 }

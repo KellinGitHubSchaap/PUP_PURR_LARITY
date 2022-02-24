@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WorldScript : MonoBehaviour
 {
@@ -56,15 +55,16 @@ public class WorldScript : MonoBehaviour
         if (m_currentTimeTillIssue > m_TimeTillNextIssue)
         {
             int value = Random.Range(0, m_machineScripts.Length);
-
+            
             if (!m_machineScripts[value].m_isFixed)
             {
                 m_machineScripts[value].BreakDown();
+                var type = m_machineScripts[value].m_type;
+                MonitorManager.Instance.HandleBreakdown(type);
             }
 
             m_currentTimeTillIssue = 0;
             m_TimeTillNextIssue = Random.Range(20f, 30f);
         }
-
     }
 }
