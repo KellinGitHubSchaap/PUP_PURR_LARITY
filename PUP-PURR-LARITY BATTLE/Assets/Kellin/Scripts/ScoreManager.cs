@@ -32,18 +32,6 @@ public class ScoreManager : MonoBehaviour
         UpdateCatDogBar(0,0);
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.M))
-        {
-            UpdateCatDogBar(20, -15);
-        }
-        else if(Input.GetKeyDown(KeyCode.I))
-        {
-            UpdateCatDogBar(-10, 20);
-        }
-    }
-
     // Update the visual Chart seen in the office
     public void UpdateCatDogBar(int dogValue, int fishValue)
     {

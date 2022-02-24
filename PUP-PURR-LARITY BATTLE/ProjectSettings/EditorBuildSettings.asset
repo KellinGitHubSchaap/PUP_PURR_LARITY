@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Kellin/Scenes/Main Game loop/PlayerLose.unity
     guid: 6b72fb2cd9d8c5b47a2e754ea38168bd
   - enabled: 1
-    path: Assets/Kellin/Scenes/Main Game loop/PlayerWon.unity
-    guid: 34415944849998749a8ff683457ba8bd
+    path: Assets/Kellin/Scenes/Main Game loop/PlayerWin.unity
+    guid: 00547e1f88680c540b0f104ed78e9fa7
   m_configObjects: {}
